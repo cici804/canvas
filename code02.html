@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>canvas绘制形状</title>
+</head>
+
+<body>
+  <canvas id="canvas1" width="500" height="600">
+  </canvas>
+  <!-- 需要用js操作canvas -->
+  <script type="text/javascript">
+    // 1、找到画布对象
+    var canvas1 = document.querySelector("#canvas1");
+    // 2、上下文对象（画笔）
+    var ctx = canvas1.getContext("2d");
+    // 画圆 参数（起点x,y,半径,起点，结束，顺false(默认)、逆true时针）
+    // ctx.arc(300, 300, 100, 0, Math.PI * 2, true)
+    // 设置字体样式
+    ctx.font = "50px 微软雅黑"
+    // 阴影
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = "rgba(0,0,0,1)";
+    ctx.shadowOffsetX = 10;
+    ctx.shadowColorY = 10;
+
+    // fillText 参数（文字，x,y坐标）
+    // ctx.fillText("helloworld", 100, 100)
+    // 空心文字 strokeText
+
+    var x = 600;
+    // 定时器设置时间，？次一秒最顺畅
+    setInterval(function () {
+      // 清空画布
+      ctx.clearRect(0, 0, 600, 600)
+      x -= 2
+      ctx.fillText("HelloWorld", x, 100)
+      ctx.strokeText("嘿嘿", x, 200)
+    }, 16)
+
+    // 绘制形状 起点到终点
+    // ctx.fillStyle = "bisque"
+    // ctx.stroke()
+    // ctx.fill()
+  </script>
+</body>
+
+</html>

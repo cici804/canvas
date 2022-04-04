@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>canvas绘制图像</title>
+</head>
+
+<body>
+  <canvas id="canvas" width="500" height="600">
+  </canvas>
+  <script>
+    var canvas = document.querySelector("#canvas");
+    var ctx = canvas.getContext("2d");
+
+    // 绘制图像
+    // ctx.drawImage(图片对象，x,y位置，宽度，高度)
+    // ctx.drawImage(图片对象，图像裁剪的x,y位置，图像裁剪的宽度，高度，x,y位置，宽度，高度)
+    // 两张照片都在外面，谁先加载完谁先出现（底层），放到同一个onload可以控制先后
+    var img = new Image()
+    img.src = "./man.jfif"
+    var img2 = new Image()
+    img2.src = "./universe.png"
+    // 图片载入后渲染数据
+    img.onload = function () {
+      ctx.drawImage(img, 0, 0, 200, 200);
+      console.log(img);
+    }
+    // 图片载入后渲染数据
+    img2.onload = function () {
+      ctx.drawImage(img2, 200, 0, 200, 200);
+      ctx.fillText("打码", 250, 100)
+      console.log(img2);
+    }
+  </script>
+</body>
+
+</html>

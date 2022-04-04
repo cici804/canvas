@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>时钟</title>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <script type="text/javascript">
+    var canvas = document.querySelector('#canvas');
+    var ctx = canvas.getContext('2d');
+
+    function renderClock(){
+      ctx.clearRect(0, 0, 800, 600);
+      ctx.save()
+      // 将坐标移动到画布的中央
+      ctx.translate(400, 300);
+      ctx.rotate(-2*Math.PI/4);
+      ctx.save();
+      // 绘制表盘
+      ctx.beginPath();
+      // 第四个参数 顺时针逆时针
+      ctx.arc(0,0,200,0,2*Math.PI);
+      ctx.strokeStyle = "darkgrey";
+      ctx.lineWidth = 10;
+      ctx.stroke();
+      // closePath() 方法创建从当前点到开始点的路径
+      ctx.closePath()
+      // 分钟刻度
+      for (var i = 0; i < 60; i++) {
+        ctx.rotate(Math.PI/30)
+        // 绘制刻度
+        ctx.beginPath()
+        ctx.moveTo(180, 0)
+        ctx.lineTo(190,0)
+        ctx.strokeStyle = "orangered"
+        ctx.lineWidth = 2;
+        ctx.stroke()
+      }
+      ctx.restore();
+      ctx.save();
+      // 小时刻度
+      for (var i = 0; i < 12; i++) {
+        ctx.rotate(Math.PI/6)
+        // 绘制刻度
+        ctx.beginPath()
+        ctx.moveTo(180, 0)
+        ctx.lineTo(200,0)
+        ctx.strokeStyle = "darkgrey"
+        ctx.lineWidth = 10;
+        ctx.stroke()
+      }
+      ctx.restore();
+      ctx.save();
+      var time = new Date();
+      var hour = time.getHours();
+      var min = time.getMinutes();
+      var sec = time.getSeconds();
+      // console.log(hour+":"+min+":"+sec)
+      // 如果时间是大于12
+      hour = hour % 12;
+
+      // 绘制秒针
+      ctx.beginPath()
+      // 根据秒针的时间进行旋转
+      ctx.rotate(2*Math.PI/60*sec)
+      ctx.moveTo(-30, 0)
+      ctx.lineTo(170, 0)
+      ctx.lineWidth = 2
+      ctx.strokeStyle = "red"
+      ctx.stroke()
+      ctx.closePath()
+
+      ctx.restore();
+      ctx.save();
+
+      // 绘制分针
+      ctx.beginPath()
+      // 根据分针的时间进行旋转
+      ctx.rotate(2*Math.PI/60*min + 2*Math.PI/3600*sec)
+      ctx.moveTo(-20, 0)
+      ctx.lineTo(160, 0)
+      ctx.lineWidth = 3
+      ctx.strokeStyle = "darkblue"
+      ctx.stroke()
+      ctx.closePath()
+
+      ctx.restore();
+      ctx.save();
+
+      // 绘制时针
+      ctx.beginPath()
+      // 根据时针的时间进行旋转
+      ctx.rotate(2*Math.PI/12*hour + 2*Math.PI/60/12*min + 2*Math.PI/3600/12*sec)
+      ctx.moveTo(-10, 0)
+      ctx.lineTo(130, 0)
+      ctx.lineWidth = 5
+      ctx.strokeStyle = "green"
+      ctx.stroke()
+      ctx.closePath()
+
+      ctx.restore();
+      ctx.restore();
+    }
+    
+    setInterval(function(){
+      renderClock()
+    }, 1000)
+
+
+  </script>
+</body>
+</html>

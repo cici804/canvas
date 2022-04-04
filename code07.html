@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>刮刮卡</title>
+    <style>
+      #ggk{
+        width: 600px;
+        height: 200px;
+        position: relative;
+      }
+      #ggk .jp {
+        width: 600px;
+        height: 200px;
+        position: absolute;
+        text-align: center;
+        color: deeppink;
+        font-size: 60px;
+        line-height: 80px;
+        left: 0;
+        top: 0;
+      }
+      #ggk #canvas{
+        width: 600px;
+        height: 200px;
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="ggk">
+      <div class="jp"></div>
+      <canvas id="canvas" width="600" height="200"></canvas>
+    </div>
+    
+    <script type="text/javascript">
+      var canvas = document.querySelector('#canvas');
+      var ggkDom = document.querySelector('#ggk');
+      var jpDom = document.querySelector('.jp');
+      // var ctx = canvas.getContext('2d');
+      var ctx = canvas.getContext('2d');
+      ctx.fillStyle = "darkgrey";
+      ctx.fillRect(0,0,600,200)
+      ctx.font="20px 微软雅黑"
+      ctx.fillStyle = "#fff";
+      ctx.fillText("刮刮卡",180,50);
+      ctx.globalCompositeOperation = "destination-out" 
+      var isDraw = false;
+      
+      // 设置 isDraw = true, 即为允许绘制
+      canvas.onmousedown = function(){
+        isDraw = true
+      }
+      // 移动的时候绘制图形，将源图像内的目标的内容给清除
+      canvas.onmousemove = function(e){
+        // console.log(e)
+        if (isDraw){
+          var x = e.pageX - ggkDom.offsetLeft;
+          var y = e.pageY - ggkDom.offsetTop;
+          
+          ctx.beginPath();
+          ctx.arc(x,y,10,0,2*Math.PI)
+          ctx.fill()
+        }
+      }
+      canvas.onmouseup = function(){
+        isDraw = false
+      }
+      var arr = [{content:"一等奖",p:0.1},{content:"二等奖",p:0.3},{content:"三等奖",p:0.6}];
+      var randomNum = Math.random();
+      if (randomNum < arr[0].p) {
+        jpDom.innerHTML = arr[0].content;
+      } else if (randomNum < arr[0].p + arr[1].p) {
+        jpDom.innerHTML = arr[1].content;
+      } else if (randomNum < 1) {
+        jpDom.innerHTML = arr[2].content;
+      }
+
+
+
+      // globalCompositeOperation 设置或返回一个源（新的）图像绘制到目标（已有）的图像中
+      // 默认值为source-over 源图像叠加在目标图像上
+      // source-atop	在目标图像顶部显示源图像。源图像位于目标图像之外的部分是不可见的。
+      // source-in	在目标图像中显示源图像。只有目标图像内的源图像部分会显示，目标图像是透明的。
+      // destination-over	在源图像上方显示目标图像。
+      // ctx.globalCompositeOperation = "destination-over"
+    </script>
+  </body>
+</html>

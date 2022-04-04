@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>canvas</title>
+</head>
+
+<body>
+  <canvas id="canvas1" width="500" height="600">
+  </canvas>
+  <!-- 需要用js操作canvas -->
+  <script>
+    // 1、找到画布对象
+    var canvas1 = document.querySelector("#canvas1");
+    // 2、上下文对象（画笔）
+    var ctx = canvas1.getContext("2d");
+    // 设置开始路径
+    ctx.beginPath()
+    // 设置绘制的起始点
+    ctx.moveTo(50, 50)
+    ctx.lineTo(50, 300)
+    ctx.lineTo(300, 300)
+    // 设置结束路径
+    ctx.closePath()
+    console.log(ctx)
+    // 绘制路径
+    // lineCap 起始路径的线段边缘设置为圆角
+    ctx.lineCap = "round"
+    // lineJoin 拐角线段边缘设置为圆角
+    ctx.lineJoin = "round"
+    ctx.strokeStyle = "aqua"
+    ctx.lineWidth = 10
+    // 绘制形状 起点到终点
+    ctx.stroke()
+    // ctx.fill()
+  </script>
+</body>
+
+</html>

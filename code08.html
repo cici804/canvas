@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>画板</title>
+  <link rel="stylesheet" type="text/css" href="./code08.css" />
+</head>
+
+<body>
+  <div class="menu">
+    <div class="btn" id="pencil">画笔</div>  
+    <div class="btn" id="rect">矩形</div>  
+    <div class="btn" id="circle">圆形</div> 
+    <div class="btn" id="eraser">橡皮擦</div>
+    <div class="btn2 download">下载图片</div> 
+    <!-- <div class="btn2 download">橡皮擦</div> -->
+    <div class="btn1 line small-size active"></div>  
+    <div class="btn1 line mid-size"></div>  
+    <div class="btn1 line big-size"></div>  
+    <div class="btn2">
+      <input type="color" name="color" id="color" value="#000000" />
+    </div>  
+  </div>
+  <canvas id="canvas"></canvas>
+  <script type="text/javascript">
+    // 将画笔功能：能够拖动鼠标在页面内绘图，能够设置画笔的粗细
+    // 能够在任意位置绘制圆形：拖动鼠标可随意在任意位置绘制圆形，并且可以随意定制大小
+    // 能够在任意位置绘制矩形：拖动鼠标可随意在任意位置绘制矩形，并且可以随意定制大小
+    var canvas = document.querySelector("#canvas");
+    var ctx = canvas.getContext('2d');
+    // 设置点中图标样式
+    var allBtn = document.querySelectorAll('.btn');
+    // 设置canvas的宽度和高度
+    canvas.setAttribute("width", canvas.offsetWidth);
+    canvas.setAttribute("height", canvas.offsetHeight);
+    // 画板对象
+    var blank = {
+      type: "none",
+      isDraw: false,
+      beginX: 0,
+      beginY: 0,
+      imageData: null,
+      // 笔粗细
+      lineWidth: 3,
+      // 笔颜色
+      color: "#000",
+      // pencil 画笔
+      pencilFn: function(e) {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        ctx.lineTo(x, y);
+        ctx.strokeStyle = blank.color;
+        ctx.lineWidth = blank.lineWidth;
+        ctx.lineCap = "round";
+        ctx.lineJoin = "round";
+        ctx.stroke();
+      },
+      // 矩形
+      rectFn:function(e) {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+        if (blank.imageData != null) {
+          ctx.putImageData(blank.imageData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+        }
+        ctx.beginPath();
+        ctx.rect(blank.beginX, blank.beginY, x - blank.beginX, y - blank.beginY);
+        ctx.strokeStyle = blank.color;
+        ctx.stroke();
+        // closePath的意思是关闭路径，不是结束路径，它只是将路径的终点与起点相连，不是开始一个新路径
+        ctx.closePath();
+      },
+      // 圆形
+      circleFn:function(e) {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        var r = Math.sqrt(Math.pow(x - blank.beginX, 2) + Math.pow(y - blank.beginY, 2))
+        // 可以清除第一个
+        ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+        // 放最终图像到画板
+        if (blank.imageData != null) {
+          ctx.putImageData(blank.imageData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+        }
+        ctx.beginPath();
+        ctx.arc(blank.beginX, blank.beginY, r, 0, 2*Math.PI);
+        ctx.strokeStyle = blank.color;
+        ctx.stroke();
+        ctx.closePath();
+      },
+      // 橡皮擦 eraser
+      eraserFn: function(e) {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        // // 可以清除第一个
+        // ctx.clearRect(0, 0, canvas.offsetWidth, canvas.offsetHeight);
+        // // 放最终图像到画板
+        // if (blank.imageData != null) {
+        //   ctx.putImageData(blank.imageData, 0, 0, 0, 0, canvas.offsetWidth, canvas.offsetHeight)
+        // }
+        ctx.beginPath();
+        ctx.lineWidth = blank.lineWidth;
+        ctx.arc(x,y,blank.lineWidth,0,2*Math.PI);
+        ctx.fillStyle  = "#fff";
+        ctx.strokeStyle = "#fff";
+        ctx.fill();
+        ctx.closePath();
+      },
+    }
+
+    var pencilBtn = document.querySelector("#pencil");
+    pencilBtn.onclick = function() {
+      allBtn.forEach(function(item, i){
+        item.classList.remove("active");
+      })
+      pencilBtn.classList.add('active');
+      blank.type = "pencil";
+    }
+    var rectBtn = document.querySelector("#rect");
+    rectBtn.onclick = function() {
+      allBtn.forEach(function(item, i){
+        item.classList.remove("active");
+      })
+      rectBtn.classList.add('active');
+      blank.type = "rect";
+    }
+    var circleBtn = document.querySelector("#circle");
+    circleBtn.onclick = function() {
+      allBtn.forEach(function(item, i){
+        item.classList.remove("active");
+      })
+      circleBtn.classList.add('active');
+      blank.type = "circle";
+    }
+    var eraserBtn = document.querySelector("#eraser");
+    eraserBtn.onclick = function() {
+      allBtn.forEach(function(item, i){
+        item.classList.remove("active");
+      })
+      eraserBtn.classList.add('active');
+      blank.type = "eraser";
+    }
+    
+
+    // 设置画笔粗细
+    var lineDevs = document.querySelectorAll(".line");
+    lineDevs.forEach(function(item, i){
+      item.onclick = function(){
+        lineDevs.forEach(function(a,b){
+          a.classList.remove("active");
+        })
+        item.classList.add("active");
+        if (i == 0) {
+          blank.lineWidth = 3;
+        } else if (i == 1){
+          blank.lineWidth = 12;
+        }else if (i == 2){
+          blank.lineWidth = 24;
+        } 
+      }
+    })
+    // 监听颜色设置改变事件
+    var colorInput = document.querySelector("#color");
+    colorInput.onchange = function(e) {
+      console.log(colorInput.value)
+      blank.color = colorInput.value;
+    }
+    // 监听下载图片按钮
+    var downloadBtn = document.querySelector(".download");
+    downloadBtn.onclick = function() {
+      var url = canvas.toDataURL();
+      const a = document.createElement('a') // 创建一个a标签
+      a.href = url // a标签的src属性赋值
+      a.download = "picture" // a标签的download属性赋值
+      document.body.appendChild(a) // 添加a标签到body下
+      a.click() // 触发a标签点击事件
+      document.body.removeChild(a) //  完成后删除a标签
+    }
+    
+    // 监听鼠标按下事件
+    canvas.onmousedown = function(e) {
+      blank.isDraw = true;
+      if (blank.type == "rect" || blank.type == "circle" || blank.type == "eraser") {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        blank.beginX = x;
+        blank.beginY = y;
+      }
+      if (blank.type == "pencil") {
+        var x = e.pageX - canvas.offsetLeft;
+        var y = e.pageY - canvas.offsetTop;
+        blank.beginX = x;
+        blank.beginY = y;
+        ctx.beginPath();
+        ctx.moveTo(x, y)
+      }
+    }
+    // 监听鼠标抬起事件
+    canvas.onmouseup = function() {
+      // 鼠标抬起才赋值
+      blank.imageData = ctx.getImageData(0,0,canvas.offsetWidth,canvas.offsetHeight);
+      blank.isDraw = false;
+
+      if (blank.type == "pencil") {
+        ctx.closePath();
+      }
+    }
+
+    // 
+    canvas.onmousemove = function(e) {
+      if (blank.isDraw) {
+        var fnStr = blank.type+'Fn';
+        blank[fnStr](e);
+      }
+    }
+  </script>
+</body>
+
+</html>

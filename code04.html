@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <title>canvas绘制视频</title>
+  <!-- 在线制作ico图标 -->
+  <!-- <link rel="" href="" / > -->
+</head>
+
+<body>
+  <!-- 外面的width和height是画板和画纸宽高 style是里面的仅是画板的宽高,当画纸和画板不一样宽高时,画纸会将原本形成的图形拉伸到画板一样大小 -->
+  <!-- <canvas id="canvas" style="width:800px; height:600px;"></canvas> -->
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <video width="800" height="" src="./cat.mp4" controls="controls"></video>
+  <script type="text/javascript">
+  // 画视频
+    var video = document.querySelector("video")
+    var canvas = document.querySelector("#canvas")
+
+    var interId;
+    var ctx = canvas.getContext("2d")
+    console.log(video)
+    video.onplay = function () {
+      interId = setInterval(function () {
+        ctx.clearRect(0, 0, 300, 700)
+        ctx.fillRect(0, 0, 300, 700)
+        ctx.drawImage(video, 0, 0, 300, 700)
+      }, 16)
+    }
+    video.onpause = function () {
+      clearInterval(interId)
+    }
+  </script>
+</body>
+
+</html>

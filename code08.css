@@ -1,0 +1,81 @@
+/* 盒模型 自适应 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 800px;
+}
+
+/* vw计算的是整个视口的宽度，包括滚动条
+      百分比计算宽度的后会不包括滚动条
+      移动端滚动条不占宽度，使用vw
+   */
+.menu {
+    width: 100vw;
+    height: 100px;
+    display: flex;
+    flex-direction: row;
+    border-bottom: 3px solid #cccccc;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn, .btn1, .btn2{
+    margin-left: 20px;
+    /* width: 120px; */
+    padding: 10px 20px;
+    /* height: 50px; */
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor:pointer
+}
+.btn.active {
+    box-shadow: 0 0 10px deepskyblue;
+}
+.btn1.active {
+    box-shadow: 0 0 10px deepskyblue;
+}
+
+.line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.small-size::after {
+    content:"";
+    background: #333333;
+    width: 3px;
+    height: 3px;
+    display: block;
+    border-radius: 50%;
+}
+.mid-size::after {
+    content:"";
+    background: #333333;
+    width: 12px;
+    height: 12px;
+    display: block;
+    border-radius: 50%;
+}
+.big-size::after {
+    content:"";
+    background: #333333;
+    width: 24px;
+    height: 24px;
+    display: block;
+    border-radius: 50%;
+}
+#canvas {
+    flex: 1;
+    /* width: 100vw;
+    height: 100vh; */
+}

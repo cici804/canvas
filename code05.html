@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>canvas变形</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="800" height="800"></canvas>
+    <script>
+      var canvas=document.querySelector('#canvas');
+      var ctx=canvas.getContext('2d');
+
+      ctx.fillStyle = "hotpink";
+      ctx.fillRect(0,0,100,100);
+      
+      // save 保留当前环境（画笔）的状态 
+      ctx.save();
+      
+      // 仅对后面的操作有影响
+      // 整个画布坐标水平移动300
+      ctx.translate(300,0);
+      // 整个画布坐标顺时针（默认）旋转45度
+      ctx.rotate(Math.PI/4);
+      // 放大缩小(x轴,y轴)
+      ctx.scale(0.5,0.5);
+
+      ctx.fillStyle = "deepskyblue";
+      // restore 恢复之前保留的环境状态[最近一次]
+      // ctx.restore();
+      ctx.fillRect(100,100,300,50);
+      
+    </script>
+  </body>
+</html>
